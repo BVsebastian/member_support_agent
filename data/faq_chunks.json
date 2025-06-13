@@ -1,0 +1,22 @@
+{
+  "chunks": [
+    {
+      "chunk_id": "faq1",
+      "text": "To reset your password, go to the login page and click 'Forgot Password'. Follow the instructions sent to your email.",
+      "source": "password_faq.pdf",
+      "char_length": 120
+    },
+    {
+      "chunk_id": "faq2",
+      "text": "You can update your membership details by logging into your account and visiting the Profile section.",
+      "source": "membership_faq.pdf",
+      "char_length": 110
+    },
+    {
+      "chunk_id": "faq3",
+      "text": "Our customer support team is available 24/7. You can reach them through the Contact Us page or by calling our support line.",
+      "source": "support_faq.pdf",
+      "char_length": 150
+    }
+  ]
+}

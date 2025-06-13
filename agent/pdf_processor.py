@@ -5,7 +5,7 @@ Module for processing PDF documents into chunks for RAG
 import json
 import datetime
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from pypdf import PdfReader
 
 def read_pdf(file_path: str) -> str:
@@ -66,22 +66,28 @@ def chunk_text(text: str, chunk_size: int = 500, overlap: int = 100) -> List[str
 
     return chunks
 
-def process_pdfs(chunk_size: int = 500, overlap: int = 100) -> None:
+def process_pdfs(chunk_size: int = 500, overlap: int = 100, 
+                input_dir: Optional[Path] = None, 
+                output_file: Optional[Path] = None) -> None:
     """
     Process PDFs in knowledge base directory and save chunks to JSON
 
     Args:
         chunk_size (int): Target size for each chunk in characters
         overlap (int): Number of characters to overlap between chunks
+        input_dir (Optional[Path]): Directory containing PDF files. If None, uses default knowledge_base directory
+        output_file (Optional[Path]): Path to output JSON file. If None, uses default faq_chunks.json
     """
     # Get the knowledge base directory path
-    knowledge_base_dir = Path(__file__).parent.parent / 'data' /'knowledge_base'
-    output_file = Path(__file__).parent.parent / 'data' / 'faq_chunks.json'
+    if input_dir is None:
+        input_dir = Path(__file__).parent.parent / 'data' / 'knowledge_base'
+    if output_file is None:
+        output_file = Path(__file__).parent.parent / 'data' / 'faq_chunks.json'
 
     # List of our PDF Files
-    pdf_files = list(knowledge_base_dir.glob('*.pdf'))
+    pdf_files = list(input_dir.glob('*.pdf'))
     if not pdf_files:
-        print(f"No PDF files found in {knowledge_base_dir}")
+        print(f"No PDF files found in {input_dir}")
         return
 
     all_chunks = []
@@ -92,7 +98,7 @@ def process_pdfs(chunk_size: int = 500, overlap: int = 100) -> None:
         print(f"Processing {pdf_file.name}...")
         try:
             # Extract text from PDF
-            text = read_pdf(str(pdf_file))  # pdf_file is already a full path
+            text = read_pdf(str(pdf_file))
 
             # Split into chunks
             text_chunks = chunk_text(text, chunk_size, overlap)
@@ -122,7 +128,7 @@ def process_pdfs(chunk_size: int = 500, overlap: int = 100) -> None:
         }
     }
 
-    # Create data directory if it doesn't exist
+    # Create output directory if it doesn't exist
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
     # Save to JSON file
@@ -130,3 +136,4 @@ def process_pdfs(chunk_size: int = 500, overlap: int = 100) -> None:
         json.dump(output_data, f, indent=2, ensure_ascii=False)
 
     print(f"Processed {len(all_chunks)} chunks from {len(pdf_files)} files and saved to {output_file}")
+
