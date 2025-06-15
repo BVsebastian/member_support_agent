@@ -11,6 +11,9 @@ class TestEmbedder(unittest.TestCase):
     def setUp(self):
         """Set up test fixtures"""
         self.embedder = Embedder()
+        # Clear the collection before each test
+        self.embedder.collection.delete(where={})
+        
         self.sample_chunks = {
             'chunks': [
                 {
@@ -34,6 +37,8 @@ class TestEmbedder(unittest.TestCase):
 
     def tearDown(self):
         """Clean up test fixtures"""
+        # Clear the collection after each test
+        self.embedder.collection.delete(where={})
         if self.chunks_file.exists():
             self.chunks_file.unlink()
 

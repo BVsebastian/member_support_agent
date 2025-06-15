@@ -89,3 +89,9 @@ class Embedder:
             'has_embeddings': has_embeddings,
             'persistence_path': persistence_path
         }
+    
+if __name__ == "__main__":
+    print("Creating embeddings...")
+    embedder = Embedder()
+    embedder.create_embeddings()
+    print("Done!")

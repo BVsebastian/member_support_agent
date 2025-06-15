@@ -1,22 +1,81 @@
 {
   "chunks": [
     {
-      "chunk_id": "faq1",
-      "text": "To reset your password, go to the login page and click 'Forgot Password'. Follow the instructions sent to your email.",
-      "source": "password_faq.pdf",
-      "char_length": 120
+      "chunk_id": "chunk_1",
+      "text": "Horizon Bay CU Account Support Manual\n1. Opening an Account\n- Required documents: valid government-issued ID, proof of address (utility bill, lease), and Social\nSecurity number.\n- Available accounts: \n  - Basic Checking: No minimum balance, no monthly fees.\n  - Premium Checking: Earns interest, free checks, overdraft protection.\n  - High-Yield Savings: Higher interest for balances over $5,000.\n  - Youth Accounts: For members under 18, with parental co-sign.",
+      "source": "Horizon Bay CU Account Support Manual.pdf",
+      "char_length": 461
     },
     {
-      "chunk_id": "faq2",
-      "text": "You can update your membership details by logging into your account and visiting the Profile section.",
-      "source": "membership_faq.pdf",
-      "char_length": 110
+      "chunk_id": "chunk_2",
+      "text": "nts: For members under 18, with parental co-sign.\n- Minimum deposit: $25 for Checking, $50 for Savings.\n- Account setup time: 20-30 minutes in-branch or via secure online form.\n2. Managing Your Account\n- Access via online banking (desktop) or Horizon Bay mobile app.\n- Direct deposit setup: Provide employer with Horizon Bay CU's routing number (321456789) and\nyour account number.\n- Transfer funds, pay bills, and set savings goals using mobile tools.",
+      "source": "Horizon Bay CU Account Support Manual.pdf",
+      "char_length": 452
     },
     {
-      "chunk_id": "faq3",
-      "text": "Our customer support team is available 24/7. You can reach them through the Contact Us page or by calling our support line.",
-      "source": "support_faq.pdf",
-      "char_length": 150
+      "chunk_id": "chunk_3",
+      "text": "bills, and set savings goals using mobile tools.\n- View transaction history, download statements, and monitor balances.\n3. Online Banking Support\n- Reset password: Click \"Forgot Password\" on login screen, enter email or member ID.\n- Enable Face ID and fingerprint login on mobile app.\n- Set up transaction alerts via text or push notification.\n- Schedule recurring transfers and bill payments.\n4. Account Security\n- Two-factor authentication (2FA) setup: via email/SMS code.",
+      "source": "Horizon Bay CU Account Support Manual.pdf",
+      "char_length": 474
+    },
+    {
+      "chunk_id": "chunk_4",
+      "text": "r authentication (2FA) setup: via email/SMS code.\n- Report fraud: Call 1-888-HBCU-HELP immediately; temporarily freeze card in app.\n- Security tips: Never share login credentials. Use unique passwords.\n5. Closing an Account\n- Steps: Visit a branch or submit a notarized closure request form.\n- Verify no pending transactions.\n- Balance will be refunded by check or electronic transfer within 3-5 business days.",
+      "source": "Horizon Bay CU Account Support Manual.pdf",
+      "char_length": 410
+    },
+    {
+      "chunk_id": "chunk_5",
+      "text": "Horizon Bay CU Member Services Toolkit\n1. Card Services\n- Activate new debit/credit card by calling 1-888-HBCU-ACTV or using the app.\n- Report lost/stolen card via 24/7 fraud hotline or app.\n- Request replacement card: mailed within 5-7 business days.\n- Set travel alerts: online or by speaking with support rep.\n2. Loan Services\n- Apply for personal, auto, or home loans via online portal.\n- Required docs: Proof of income, ID, credit history.",
+      "source": "Horizon Bay CU Member Services Toolkit.pdf",
+      "char_length": 444
+    },
+    {
+      "chunk_id": "chunk_6",
+      "text": "quired docs: Proof of income, ID, credit history.\n- Loan decision timeline: Within 1-2 business days for pre-approval.\n- Loan calculators available on the website to estimate monthly payments.\n3. Dispute Resolution\n- Submit a dispute form via online banking > Disputes.\n- Upload supporting evidence (screenshots, receipts).\n- Timeline: Resolution usually within 3-10 business days.\n- Temporary credit may be issued during investigation.",
+      "source": "Horizon Bay CU Member Services Toolkit.pdf",
+      "char_length": 436
+    },
+    {
+      "chunk_id": "chunk_7",
+      "text": "porary credit may be issued during investigation.\n4. Branch Services\n- Notary service, cashier's checks, money orders available in all locations.\n- Coin counters available at select branches.\n- Walk-ins welcome, but appointments encouraged via horizonbaycu.org/appointments.\n5. Digital Self-Service Tools\n- eStatements stored for up to 7 years.\n- Online bill pay: Schedule one-time or recurring payments.\n- Budget tracker: Set monthly targets and view spending by category.",
+      "source": "Horizon Bay CU Member Services Toolkit.pdf",
+      "char_length": 473
+    },
+    {
+      "chunk_id": "chunk_8",
+      "text": "et monthly targets and view spending by category.\n- Tax documents (1099s, etc.) downloadable via year-end tax center.",
+      "source": "Horizon Bay CU Member Services Toolkit.pdf",
+      "char_length": 117
+    },
+    {
+      "chunk_id": "chunk_9",
+      "text": "Why Join Horizon Bay Credit Union\nWhy Join Horizon Bay Credit Union?\n1. Community-Focused Values\n- Horizon Bay CU reinvests earnings into local education, financial literacy, and public service\ninitiatives.\n- Annual member meetings give members voting rights and a voice in credit union leadership.\n2. Lower Fees & Better Rates\n- Interest rates: Auto loans as low as 4.29% APR; savings rates up to 3.50% APY.\n- No overdraft fees on Basic Checking (opt-in required).",
+      "source": "Why Join Horizon Bay Credit Union.pdf",
+      "char_length": 465
+    },
+    {
+      "chunk_id": "chunk_10",
+      "text": "erdraft fees on Basic Checking (opt-in required).\n- Fee-free ATMs nationwide via Co-Op Network (30,000+ locations).\n3. Financial Tools & Resources\n- Weekly webinars: Budgeting, first-time homebuying, credit rebuilding.\n- Free access to credit report and score monitoring via online portal.\n- Personalized financial coaching sessions available upon request.\n4. Member Perks\n- Travel discounts via Love My Credit Union Rewards.\n- Free TurboTax® access during tax season.",
+      "source": "Why Join Horizon Bay Credit Union.pdf",
+      "char_length": 468
+    },
+    {
+      "chunk_id": "chunk_11",
+      "text": "wards.\n- Free TurboTax® access during tax season.\n- Scholarship program: $1,000-$5,000 awards for students pursuing higher education.\n5. Exclusive Member Support\n- Each member assigned a support specialist for major financial milestones.\n- 24/7 virtual assistant available via mobile app.\n- Priority service hotline for Premium account holders.",
+      "source": "Why Join Horizon Bay Credit Union.pdf",
+      "char_length": 344
     }
-  ]
+  ],
+  "metadata": {
+    "total_chunks": 11,
+    "processed_files": [
+      "Horizon Bay CU Account Support Manual.pdf",
+      "Horizon Bay CU Member Services Toolkit.pdf",
+      "Why Join Horizon Bay Credit Union.pdf"
+    ],
+    "chunk_size": 500,
+    "overlap": 50,
+    "creation_timestamp": "2025-06-15T15:53:18.297525"
+  }
 }

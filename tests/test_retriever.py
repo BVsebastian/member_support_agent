@@ -31,5 +31,17 @@ class TestRetriever(unittest.TestCase):
             self.assertGreaterEqual(result['similarity_score'], 0)
             self.assertLessEqual(result['similarity_score'], 1)
 
+    def test_retrieve_specific_content(self):
+        """Test that specific queries return expected content"""
+        query = "What documents do I need to open an account?"
+        results = self.retriever.retrieve_top_chunks(query)
+        
+        # Check if results contain account opening info
+        account_info_found = any(
+            "Required documents" in result['text'] 
+            for result in results
+        )
+        self.assertTrue(account_info_found, "Results should contain account opening requirements")
+
 if __name__ == '__main__':
     unittest.main()
