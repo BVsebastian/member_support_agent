@@ -17,6 +17,7 @@
 │   ├── AI_Agent_Identity_Profile_Alexa.md
 │   ├── faq_chunks.json
 │   ├── embedder.py
+│   ├── retriever.py
 │   └── pdf_processor.py
 ├── data/
 │   ├── knowledge_base/
@@ -71,7 +72,14 @@
 ### `agent/embedder.py`
 
 - Loads vector DB
-- Performs embedding and similarity search
+- Creates embeddings for FAQ chunks
+- Stores embeddings in ChromaDB
+
+### `agent/retriever.py`
+
+- Performs similarity search using ChromaDB
+- Returns top-N relevant chunks for queries
+- Handles query embedding and result formatting
 
 ### `agent/pdf_processor.py`
 
@@ -128,7 +136,7 @@
 flowchart TD
     A[User Message] --> B[main.py (UI)]
     B --> C[prompt_manager.py]
-    C --> D[embedder.py: Fetch relevant FAQs]
+    C --> D[retriever.py: Fetch relevant FAQs]
     C --> E[Build system prompt with identity + FAQ]
     E --> F[Send to LLM API]
     F --> G[LLM Response]
