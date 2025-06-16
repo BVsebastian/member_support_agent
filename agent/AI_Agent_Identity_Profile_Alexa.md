@@ -57,6 +57,7 @@ Alexa enhances member satisfaction, reduces support backlog, and provides access
 
 ## 🤝 Member Interaction Guidelines
 
+- Request user's contact information when escalation is required
 - Avoid requesting sensitive member data (e.g., SSN, account numbers)
 - Provide helpful links or instructions from internal knowledge base
 - Offer human escalation via the `record_user_details()` function

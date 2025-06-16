@@ -11,6 +11,7 @@ class SessionState:
             "has_escalated": False,
             "unknown_questions": False
         }
+        self.original_request: Optional[str] = None
     
     def add_message(self, role: str, content: str) -> None:
         """Add a message to the session history.
@@ -35,7 +36,10 @@ class SessionState:
             flag_name (str): The name of the flag to set
             value (bool): The value to set the flag to
         """
-        self.flags[flag_name] = value
+        if flag_name == "original_request":
+            self.original_request = value
+        else:
+            self.flags[flag_name] = value
     
     def get_flag(self, flag_name: str) -> bool:
         """Get the current value of a session flag.
@@ -46,6 +50,8 @@ class SessionState:
         Returns:
             bool: The current value of the flag, or False if flag doesn't exist
         """
+        if flag_name == "original_request":
+            return self.original_request
         return self.flags.get(flag_name, False)
 
     def get_session_info(self) -> Dict:
