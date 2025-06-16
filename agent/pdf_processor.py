@@ -53,7 +53,7 @@ def clean_text(text: str) -> str:
     
     return '\n'.join(cleaned_lines)
 
-def chunk_text(text: str, chunk_size: int = 500, overlap: int = 50) -> List[str]:
+def chunk_text(text: str, chunk_size: int = 1000, overlap: int = 200) -> List[str]:
     """
     Split text into chunks with better boundary detection
     """
@@ -97,7 +97,7 @@ def chunk_text(text: str, chunk_size: int = 500, overlap: int = 50) -> List[str]
 
     return chunks
 
-def process_pdfs(chunk_size: int = 500, overlap: int = 50, 
+def process_pdfs(chunk_size: int = 1000, overlap: int = 200, 
                 input_dir: Optional[Path] = None, 
                 output_file: Optional[Path] = None) -> None:
     """

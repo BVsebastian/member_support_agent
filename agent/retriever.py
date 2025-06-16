@@ -61,19 +61,19 @@ class Retriever:
         return formatted_results
 
 
-if __name__ == "__main__":
-    print("Retrieving top chunks...")
-    retriever = Retriever()
-    results = retriever.retrieve_top_chunks("what are the required documents for signing up for a checking account?")
+# if __name__ == "__main__":
+#     print("Retrieving top chunks...")
+#     retriever = Retriever()
+#     results = retriever.retrieve_top_chunks("what are the required documents for signing up for a checking account?")
     
-    print("\nTop matching chunks:")
-    print("-" * 80)
-    for i, result in enumerate(results, 1):
-        print(f"\nResult {i}:")
-        print(f"Source: {result['source']}")
-        print(f"Similarity Score: {result['similarity_score']:.3f}")
-        print(f"Text: {result['text']}")
-        print("-" * 80)
+#     print("\nTop matching chunks:")
+#     print("-" * 80)
+#     for i, result in enumerate(results, 1):
+#         print(f"\nResult {i}:")
+#         print(f"Source: {result['source']}")
+#         print(f"Similarity Score: {result['similarity_score']:.3f}")
+#         print(f"Text: {result['text']}")
+#         print("-" * 80)
     
-    print("\nDone!")
+#     print("\nDone!")
 
