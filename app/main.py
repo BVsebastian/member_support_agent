@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-def respond(message):
+def respond(message, history):
     print(f"\nUser Question: {message}")  # Print the question
     
     # 1. Get system prompt with Alexa's identity
@@ -38,18 +38,15 @@ def respond(message):
     return answer
 
 # Create the Gradio interface
-iface = gr.Interface(
+iface = gr.ChatInterface(
     fn=respond,
-    inputs=gr.Textbox(label="Ask a question"),
-    outputs=gr.Textbox(label="Response"),
     title="Member Support AI Agent",
     description="Ask me anything about Horizon Bay Credit Union services!",
     examples=[
         "What documents do I need to open an account?",
         "How do I reset my password?",
         "What are the fees for a checking account?",
-    ],
-    flagging_mode="never"
+    ]
 )
 
 if __name__ == "__main__":
