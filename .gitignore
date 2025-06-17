@@ -31,7 +31,9 @@ Thumbs.db
 
 # Local development
 *.sqlite3
-.cache/ 
+.cache/
+data/embeddings/
+faq_chunks.json
 
 config/secrets.env
 

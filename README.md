@@ -1,3 +1,9 @@
+---
+title: member_support_agent
+app_file: app/main.py
+sdk: gradio
+sdk_version: 5.33.2
+---
 # Member Support Agent
 
 An AI-powered member support agent for Horizon Bay Credit Union that handles member inquiries, escalations, and provides support using a tool-driven architecture.
