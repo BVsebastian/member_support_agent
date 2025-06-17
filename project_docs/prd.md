@@ -3,8 +3,7 @@
 **Project Name**: Member Support Agent  
 **Organization**: Horizon Bay Credit Union  
 **Owner**: Benedict Sebastian  
-**Engineer**: [AI Engineer Name]  
-**Date**: [Insert Date]
+**Date**: June 17, 2024
 
 ---
 
@@ -28,12 +27,15 @@ Build a web-based AI assistant named **Alexa** to act as a virtual Member Suppor
 - Retrieval-Augmented Generation (RAG) using internal knowledge base
 - Automated RAG pipeline initialization
 - Web UI (Gradio) with HuggingFace Spaces deployment
+- Session management and chat history
+- Efficient RAG pipeline with in-memory embeddings
 
 ### ❌ Out of Scope
 
 - Secure transactions, account-level authentication
 - Live human chat
 - Real-time banking integrations
+- Persistent chat history across deployments
 
 ---
 
@@ -44,18 +46,21 @@ Build a web-based AI assistant named **Alexa** to act as a virtual Member Suppor
 - Alexa is a virtual rep
 - Tone and values from Identity Profile
 - System prompt injected in every session
+- Tool usage guidelines integrated into prompt
 
 ### 🔹 Feature 2: Tool - Log Unknown Question
 
 - Tool: `log_unknown_question(question)`
 - Logs query + context + timestamp
 - Pushes alert to support team
+- Prevents duplicate notifications
 
 ### 🔹 Feature 3: Tool - Log Contact Escalation
 
 - Tool: `record_user_details(email, name?, notes?)`
 - Invoked when user requests follow-up/escalation
 - Pushover alert with captured details
+- Handles multiple issue types (fraud, loan, card, etc.)
 
 ### 🔹 Feature 4: RAG-Based FAQ Support
 
@@ -68,6 +73,7 @@ Build a web-based AI assistant named **Alexa** to act as a virtual Member Suppor
   - PDF processing on first run
   - Embedding creation if needed
   - Persistent storage in ChromaDB
+  - Efficient retrieval with similarity search
 
 ### 🔹 Feature 5: Tool-Driven Framework
 
@@ -75,6 +81,7 @@ Build a web-based AI assistant named **Alexa** to act as a virtual Member Suppor
 - LLM returns `tool_call` in response
 - System executes tools dynamically via handler
 - Easily extensible: add tools without touching core logic
+- Robust error handling and logging
 
 ### 🔹 Feature 6: Automated Deployment
 
@@ -82,6 +89,8 @@ Build a web-based AI assistant named **Alexa** to act as a virtual Member Suppor
 - Environment variable management
 - Automated RAG pipeline setup
 - Persistent storage handling
+- Session management
+- Easy restart capability
 
 ---
 
@@ -104,6 +113,8 @@ Build a web-based AI assistant named **Alexa** to act as a virtual Member Suppor
 - LLM maintains tone and logic across sessions
 - RAG pipeline initializes automatically on first run
 - Successful deployment on HuggingFace Spaces
+- Efficient session management
+- Proper handling of tool calls and notifications
 
 ---
 
@@ -117,3 +128,5 @@ Build a web-based AI assistant named **Alexa** to act as a virtual Member Suppor
 - Pushover integration
 - HuggingFace Spaces deployment
 - Complete documentation + `README.md`
+- Session management system
+- Error handling and logging
