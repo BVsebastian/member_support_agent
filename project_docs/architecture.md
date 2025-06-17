@@ -1,4 +1,4 @@
-# 📐 CUAssist – AI Member Support Agent
+# 📐 Member Support Agent – AI Architecture (Tool-Driven)
 
 **Project Architecture Overview**
 
@@ -31,6 +31,7 @@
 │   ├── test_rag.py
 │   ├── test_pushover.py
 │   └── test_pdf_processor.py
+├── tools.py
 ├── .env
 ├── requirements.txt
 ├── README.md
@@ -46,6 +47,7 @@
 - Launches the Gradio UI
 - Handles user input/output loop
 - Passes user message to LLM with context
+- Integrates tool schema + handles tool call responses
 
 ### `app/prompt_manager.py`
 
@@ -59,6 +61,12 @@
 ### `app/state.py`
 
 - In-memory session state: history, flags, context
+
+### `tools.py`
+
+- Contains callable functions: `send_notification`, `record_user_details`, `log_unknown_question`
+- Each tool has a defined JSON schema for LLM registration
+- Includes `handle_tool_call()` to route tool calls
 
 ---
 
@@ -100,7 +108,7 @@
 
 ### `data/embeddings/`
 
-- Vector index (FAISS or ChromaDB)
+- Vector index (ChromaDB)
 
 ### `data/logs/`
 
@@ -130,7 +138,7 @@
 
 ---
 
-## 🔌 Service Flow & Integration
+## 🔌 Tool-Driven Service Flow
 
 ```mermaid
 flowchart TD
@@ -138,17 +146,27 @@ flowchart TD
     B --> C[prompt_manager.py]
     C --> D[retriever.py: Fetch relevant FAQs]
     C --> E[Build system prompt with identity + FAQ]
-    E --> F[Send to LLM API]
+    E --> F[Send to LLM API + Tool Schemas]
     F --> G[LLM Response]
-    G --> B
-    G -->|Unknown?| H[pushover_alerts.py: record_unknown_question()]
-    G -->|Escalation?| I[pushover_alerts.py: record_user_details()]
 
-    J[PDF Documents] --> K[pdf_processor.py]
-    K --> L[Text Chunks]
-    L --> M[embedder.py: Create Embeddings]
-    M --> N[Vector Database]
-    D --> N
+    G -->|Tool Call?| H[handle_tool_call()]
+    H --> I[Execute corresponding function (send_notification, record_user_details, etc.)]
+    I --> J[Update state/logs or trigger alert]
+
+    G -->|Final Reply| B
+
+    subgraph Tools
+        K1[send_notification]
+        K2[record_user_details]
+        K3[log_unknown_question]
+    end
 ```
 
 ---
+
+## 🔧 Tool-Driven Architecture Benefits
+
+- Decouples business logic from UI
+- LLM determines when tools should be used
+- Functions can be reused or extended without touching main logic
+- Easier debugging and scaling

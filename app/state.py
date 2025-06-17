@@ -12,6 +12,7 @@ class SessionState:
             "unknown_questions": False
         }
         self.original_request: Optional[str] = None
+        self.notifications_sent: Dict[str, bool] = {}  # Track notifications by issue type
     
     def add_message(self, role: str, content: str) -> None:
         """Add a message to the session history.
@@ -54,6 +55,25 @@ class SessionState:
             return self.original_request
         return self.flags.get(flag_name, False)
 
+    def has_notification_sent(self, issue_type: str) -> bool:
+        """Check if a notification has been sent for a specific issue type.
+        
+        Args:
+            issue_type (str): The type of issue to check
+            
+        Returns:
+            bool: True if a notification has been sent for this issue type
+        """
+        return self.notifications_sent.get(issue_type, False)
+    
+    def mark_notification_sent(self, issue_type: str) -> None:
+        """Mark that a notification has been sent for a specific issue type.
+        
+        Args:
+            issue_type (str): The type of issue to mark as notified
+        """
+        self.notifications_sent[issue_type] = True
+
     def get_session_info(self) -> Dict:
         return {
             "session_id": self.session_id,
@@ -64,5 +84,7 @@ class SessionState:
     
     def get_session_summary(self) -> str:
         return f"Session ID: {self.session_id}\nDuration: {self.get_session_duration()} seconds"
-    
+
+# Create a single instance of SessionState to be used across the application
+session_state = SessionState()
     

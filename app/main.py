@@ -1,18 +1,89 @@
 import gradio as gr
 from agent.retriever import Retriever
 from app.prompt_manager import get_system_prompt
-from app.state import SessionState
+from app.state import session_state  
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
-import app.pushover_alerts as pushover
-from datetime import datetime
+import json
+from tools import handle_tool_call
 
-#Load environment variables
+# Load environment variables
 load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-session_state = SessionState()
+
+# Define tool schemas
+tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "send_notification",
+            "description": "Send a notification about an escalation request",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "original_request": {
+                        "type": "string",
+                        "description": "The user's original request/issue"
+                    },
+                    "contact_info": {
+                        "type": "object",
+                        "properties": {
+                            "name": {"type": "string"},
+                            "email": {"type": "string"},
+                            "phone": {"type": "string"}
+                        }
+                    }
+                },
+                "required": ["original_request"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "record_user_details",
+            "description": "Record user details for follow-up",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "user_details": {
+                        "type": "object",
+                        "properties": {
+                            "name": {"type": "string"},
+                            "email": {"type": "string"},
+                            "phone": {"type": "string"},
+                            "notes": {"type": "string"}
+                        }
+                    }
+                },
+                "required": ["user_details"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "log_unknown_question",
+            "description": "Log questions that couldn't be answered",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "question": {
+                        "type": "string",
+                        "description": "The unanswered question"
+                    },
+                    "context": {
+                        "type": "object",
+                        "description": "Additional context about the question"
+                    }
+                },
+                "required": ["question"]
+            }
+        }
+    }
+]
 
 def update_session_state(message, role):
     session_state.add_message(role, message)
@@ -21,7 +92,7 @@ def get_session_info():
     return session_state.get_session_info()
 
 def respond(message, history):
-    print(f"\nUser Question: {message}")  # Print the question
+    print(f"\nUser Question: {message}")
 
     # Add user message to session state
     session_state.add_message("user", message)
@@ -47,80 +118,62 @@ def respond(message, history):
     context += f"\nSession Duration: {session_state.get_session_duration()} seconds\n"
     context += f"Total Messages: {len(session_state.get_messages())}\n"
 
-    # Add escalation status
-    context += f"\nEscalation Status: {'Escalated' if session_state.get_flag('has_escalated') else 'Not Escalated'}\n"
-    
+    # 4. Call OpenAI API with tools
+    messages = [
+        {"role": "system", "content": context},
+        {"role": "user", "content": message}
+    ]
 
-    # 4. Call OpenAI API
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": context},
-            {"role": "user", "content": message}
-        ]
-    )
-    
-    answer = response.choices[0].message.content
-    print(f"\nAssistant Response: {answer}")  # Print the response
-
-    # Check for escalation
-    if "[ESCALATION]" in answer:
-        # Set escalation flag and store original request if this is first escalation
-        if not session_state.get_flag("has_escalated"):
-            # Store the first message that mentions escalation
-            session_state.set_flag("original_request", message)
-            session_state.set_flag("has_escalated", True)
+    done = False
+    while not done:
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=messages,
+            tools=tools
+        )
         
-        # Initialize contact info dictionary
-        contact_info = {}
+        message = response.choices[0].message
         
-        # Extract user details from the response
-        user_details = {
-            "timestamp": datetime.now().isoformat(),
-            "session_id": session_state.session_id,
-            "original_request": session_state.get_flag("original_request") or "No specific issue mentioned"
-        }
-        print(f"\noriginal request: {session_state.get_flag('original_request')}")
-
-        # Extract formatted user details from the response if they exist
-        if "[USER_DETAILS]" in answer:
-            details_section = answer.split("[USER_DETAILS]")[1].split("[/USER_DETAILS]")[0]
-            # Parse the details into a dictionary
-            for item in details_section.split(","):
-                if "=" in item:
-                    key, value = item.split("=")
-                    contact_info[key.strip()] = value.strip()
-            
-            # Add contact info to user_details
-            user_details["contact_info"] = contact_info
-            
-            # Create a user-friendly summary of the details
-            details_summary = "\nHere are the details I've collected:\n"
-            if "name" in contact_info:
-                details_summary += f"- Name: {contact_info['name']}\n"
-            if "email" in contact_info:
-                details_summary += f"- Email: {contact_info['email']}\n"
-            if "phone" in contact_info:
-                details_summary += f"- Phone: {contact_info['phone']}\n"
-            
-            # Remove the USER_DETAILS section and add our summary
-            answer = answer.replace(f"[USER_DETAILS]{details_section}[/USER_DETAILS]", "").strip()
-            answer = answer + details_summary
-
-            # Send notification with whatever details we have
-            print(f"\nUser Details: {user_details}")
-            pushover.record_user_details(user_details)
-        
-        # Remove the ESCALATION tag from the response
-        answer = answer.replace("[ESCALATION]", "").strip()
+        if response.choices[0].finish_reason == "tool_calls":
+            # Handle tool calls
+            tool_calls = message.tool_calls
+            for tool_call in tool_calls:
+                # Execute the tool call
+                result = handle_tool_call({
+                    "name": tool_call.function.name,
+                    "params": json.loads(tool_call.function.arguments)
+                })
+                
+                # Add the tool call and its result to the conversation
+                messages.append(message)
+                messages.append({
+                    "role": "tool",
+                    "content": json.dumps(result),
+                    "tool_call_id": tool_call.id
+                })
+                
+                # Log the tool call result
+                print(f"\nTool Call Result ({tool_call.function.name}): {result}")
+                
+                # If this was a notification and it failed because one was already sent,
+                # we should let the LLM know to adjust its response
+                if (tool_call.function.name == "send_notification" and 
+                    not result.get("success") and 
+                    "already sent" in result.get("message", "").lower()):
+                    messages.append({
+                        "role": "system",
+                        "content": "A notification has already been sent for this escalation. Please acknowledge this to the user and continue with the conversation."
+                    })
+        else:
+            done = True
 
     # Add assistant response to session state
-    session_state.add_message("assistant", answer)
+    session_state.add_message("assistant", message.content)
 
     print(f"\nSession State: {session_state.get_session_info()}")
-    print(f"\nAssistant Response: {answer}")
+    print(f"\nAssistant Response: {message.content}")
 
-    return answer
+    return message.content
 
 # Create the Gradio interface
 iface = gr.ChatInterface(
@@ -131,7 +184,8 @@ iface = gr.ChatInterface(
         "What documents do I need to open an account?",
         "How do I reset my password?",
         "What are the fees for a checking account?",
-    ]
+    ],
+    type="messages"  # Use the new message format
 )
 
 if __name__ == "__main__":

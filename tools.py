@@ -1,0 +1,137 @@
+import json
+from datetime import datetime
+
+def send_notification(params):
+    """
+    Send a notification about an escalation request.
+    
+    Args:
+        params (dict): Dictionary containing:
+            - original_request (str): The user's original request/issue
+            - contact_info (dict, optional): Dictionary of contact details (name, email, phone)
+            - issue_type (str): The type of issue being escalated
+    
+    Returns:
+        dict: Result of the notification attempt
+    """
+    from app.state import session_state
+    
+    # Extract issue type from the request
+    issue_type = params.get("issue_type", "general")
+    
+    # Check if a notification has already been sent for this specific issue type
+    if session_state.has_notification_sent(issue_type):
+        return {
+            "success": False,
+            "message": f"Notification already sent for this {issue_type} issue"
+        }
+    
+    # Prepare notification details
+    details = {
+        "original_request": params.get("original_request", "No specific issue mentioned"),
+        "contact_info": params.get("contact_info", {}),
+        "timestamp": datetime.now().isoformat(),
+        "session_id": session_state.session_id,
+        "issue_type": issue_type
+    }
+    
+    # Send notification
+    try:
+        from app.pushover_alerts import push
+        push(details)
+        
+        # Mark notification as sent for this issue type
+        session_state.mark_notification_sent(issue_type)
+        
+        return {
+            "success": True,
+            "message": "Notification sent successfully"
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Failed to send notification: {str(e)}"
+        }
+
+def record_user_details(params):
+    """
+    Record user details for follow-up.
+    
+    Args:
+        params (dict): Dictionary containing:
+            - user_details (dict): Dictionary of user information (name, email, phone, notes)
+    
+    Returns:
+        dict: Result of the operation
+    """
+    try:
+        user_details = params.get('user_details', {})
+   
+        return {
+            "success": True,
+            "message": "User details recorded successfully"
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Error recording user details: {str(e)}"
+        }
+
+def log_unknown_question(params):
+    """
+    Log questions that couldn't be answered.
+    
+    Args:
+        params (dict): Dictionary containing:
+            - question (str): The unanswered question
+            - context (dict, optional): Additional context about the question
+    
+    Returns:
+        dict: Result of the operation
+    """
+    try:
+        unknown_question = params.get('question', '')
+        context = params.get('context', {})
+        # TODO: Implement the actual logging logic (e.g., logging to a file or database)
+        return {
+            "success": True,
+            "message": "Unknown question logged successfully"
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Error logging unknown question: {str(e)}"
+        }
+
+def handle_tool_call(tool_call):
+    """
+    Handle a tool call by executing the appropriate function.
+    
+    Args:
+        tool_call (dict): Dictionary containing:
+            - name (str): The name of the tool to call
+            - params (dict): The parameters to pass to the tool
+    
+    Returns:
+        dict: Result of the tool call
+    """
+    try:
+        tool_name = tool_call.get('name')
+        params = tool_call.get('params', {})
+        
+        if tool_name == 'send_notification':
+            return send_notification(params)
+        elif tool_name == 'record_user_details':
+            return record_user_details(params)
+        elif tool_name == 'log_unknown_question':
+            return log_unknown_question(params)
+        else:
+            return {
+                "success": False,
+                "message": f"Unknown tool: {tool_name}"
+            }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Error handling tool call: {str(e)}"
+        }

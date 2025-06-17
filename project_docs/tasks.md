@@ -1,4 +1,4 @@
-# 🧱 CUAssist MVP Build Plan – Step-by-Step
+# 🧱 Member Support Agent – Build Plan (Tool-Driven)
 
 Each task is atomic, testable, and has a clear start and end.  
 **Project Root:** `member_support_agent/`
@@ -9,13 +9,12 @@ Each task is atomic, testable, and has a clear start and end.
 
 ### Task 1: Initialize Project Structure
 
-- **Start:** Create `member_support_agent/` root directory with subfolders:
+- Create `member_support_agent/` root directory with subfolders:
   - `app/`, `agent/`, `data/`, `config/`, `tests/`
-- **End:** Folders are in place and committed to version control.
 
-### Task 2: Create `requirements.txt` + Setup UV Environment with ChromaDB
+### Task 2: Create `requirements.txt` + Setup UV Environment
 
-- **Start:** Add dependencies to `requirements.txt`:
+- Add dependencies:
   ```txt
   openai
   gradio
@@ -23,7 +22,7 @@ Each task is atomic, testable, and has a clear start and end.
   python-dotenv
   requests
   ```
-- **End:** Run:
+- Run:
   ```bash
   uv venv
   uv pip install -r requirements.txt
@@ -31,31 +30,26 @@ Each task is atomic, testable, and has a clear start and end.
 
 ### Task 3: Add `.env` + `config/secrets.env`
 
-- **Start:** Create `.env` and `config/secrets.env` with:
+- Populate:
   ```env
   OPENAI_API_KEY=
   PUSHOVER_TOKEN=
   PUSHOVER_USER=
   ```
-- **End:** Variables are loaded using `dotenv`.
 
 ---
 
 ## 🧠 SYSTEM PROMPT + IDENTITY
 
-### Task 4: (Removed – Already Complete)
-
-- Identity Profile PDF: `AI_Agent_Identity_Profile_Alexa.pdf`
+### Task 4: (Removed - Already Complete)
 
 ### Task 5: Implement `prompt_manager.py`
 
-- **Start:** Build `get_system_prompt()` to return formatted prompt.
-- **End:** Outputs identity prompt string.
+- Function: `get_system_prompt()` returns formatted identity prompt
 
 ### Task 6: Unit Test for Prompt
 
-- **Start:** `tests/test_prompt.py` verifies key phrases in prompt.
-- **End:** Tests pass.
+- Test `test_prompt.py` for expected system prompt phrases
 
 ---
 
@@ -63,31 +57,26 @@ Each task is atomic, testable, and has a clear start and end.
 
 ### Task 7: Chunk PDF FAQ Documents
 
-- Source PDFs from `data/knowledge_base/`:
-  - `Horizon Bay CU Account Support Manual.pdf`
-  - `Horizon Bay CU Member Services Toolkit.pdf`
-  - `Why Join Horizon Bay Credit Union.pdf`
-- **End:** Save to `data/faq_chunks.json`
+- Chunk: `data/knowledge_base/*.pdf`
+- Output: `faq_chunks.json`
 
 ### Task 8: Embed Chunks
 
-- **Start:** Vectorize chunks using OpenAI embeddings.
-- **End:** Each chunk includes vector metadata.
+- Vectorize using OpenAI embeddings
+- Store with metadata
 
-### Task 9: Build ChromaDB Vector Index
+### Task 9: Build ChromaDB Index
 
-- **Start:** Insert vectors into Chroma index.
-- **End:** Persisted to `data/embeddings/`
+- Persist index to `data/embeddings/`
 
 ### Task 10: Implement Retriever
 
-- **Start:** `retrieve_top_chunks(query)` returns top-N matches.
-- **End:** Matches include chunk text + metadata.
+- Function: `retrieve_top_chunks(query)`
+- Output: chunk text + metadata
 
-### Task 11: Unit Test for RAG
+### Task 11: Unit Test RAG
 
-- **Start:** Assert test query returns known match.
-- **End:** Test passes.
+- Validate known query returns expected result
 
 ---
 
@@ -95,58 +84,79 @@ Each task is atomic, testable, and has a clear start and end.
 
 ### Task 12: Build Minimal Gradio UI
 
-- **Start:** Build textbox + output window.
-- **End:** Submits message and returns dummy reply.
+- Textbox + output window
+- Submit message, return dummy reply
 
 ### Task 13: Add Prompt Flow
 
-- **Start:** Combine system prompt, RAG, and OpenAI call.
-- **End:** Chat works with prompt + FAQ support.
+- Combine system prompt, RAG, and OpenAI call
 
 ### Task 14: Add Session State
 
-- **Start:** Track conversation and flags in `state.py`.
-- **End:** Session memory is functional.
+- Store chat history and flags using `state.py`
 
 ---
 
-## 🚨 ALERTS + LOGGING
+## ⚠️ ALERTS + LOGGING
 
 ### Task 15: Create `pushover_alerts.py`
 
-- **Start:** Implement:
-  - `record_unknown_question(question)`
-  - `record_user_details(email, name?, notes?)`
-- **End:** Triggers Pushover alert.
+- `record_unknown_question(question)`
+- `record_user_details(email, name?, notes?)`
 
 ### Task 16: Integrate Alerts in Chat
 
-- **Start:** Detect escalation or unknowns in chat.
-- **End:** Alerts and logs are triggered.
+- Detect escalation or unknown question triggers
 
 ### Task 17: Log to `data/logs/`
 
-- **Start:** Save alert events as JSON with timestamp.
-- **End:** Files stored under `data/logs/`
+- Save event JSONs with timestamps
+
+---
+
+## 🔧 TOOL-DRIVEN LOGIC
+
+### Task 18: Define Tool Functions
+
+- File: `tools.py`
+- Functions:
+  - `send_notification(params)`
+  - `record_user_details(params)`
+  - `log_unknown_question(params)`
+
+### Task 19: Define Tool Schemas
+
+- Define JSON schemas describing inputs + purpose
+- Register during LLM invocation
+
+### Task 20: Implement Tool Handler
+
+- `handle_tool_call(tool_call_obj)`
+- Route to correct function and return result
+
+### Task 21: Update Chat Loop
+
+- Modify `main.py` to:
+  - Pass tool schema to LLM
+  - Detect tool calls in response
+  - Call `handle_tool_call()`
 
 ---
 
 ## ✅ FINAL QA + DEPLOY
 
-### Task 18: Add `run.sh`
+### Task 22: Add `run.sh`
 
-- **Start:** Launch script for dev environment.
-- **End:** Runs Gradio UI with `./run.sh`
+- Launches Gradio app
 
-### Task 19: Manual QA
+### Task 23: Manual QA
 
-- **Start:** Test:
-  - FAQ response
-  - Unknown question alert
-  - Contact escalation
-- **End:** All cases pass
+- Test full flow:
+  - FAQ success
+  - Unknown detection
+  - Escalation + tool execution
 
-### Task 20: Create `README.md`
+### Task 24: Write `README.md`
 
-- **Start:** Document setup, `.env`, UV setup, run instructions.
-- **End:** Fully onboardable for devs.
+- Setup, dependencies, usage
+- Document tool-driven approach
