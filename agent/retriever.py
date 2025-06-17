@@ -13,9 +13,7 @@ class Retriever:
         self.client = chromadb.PersistentClient(
             path=str(Path(__file__).parent.parent / "data" / "embeddings")
         )
-    
-        self.collection = self.client.get_collection(
-        name="faq_chunks",)
+        self.collection = self.client.get_collection(name="faq_chunks")
 
     def retrieve_top_chunks(self, query: str, n_results: int = 3) -> list:
         """
@@ -31,20 +29,20 @@ class Retriever:
                 - char_length: Length of the chunk
                 - similarity_score: Cosine similarity score
         """
-        #Create embedding for the query
+        # Create embedding for the query
         response = openai.embeddings.create(
             input=query,
             model="text-embedding-ada-002"
         )
         embedding = response.data[0].embedding
 
-        #Query ChromaDB for similar chunks
+        # Query ChromaDB for similar chunks
         results = self.collection.query(
             query_embeddings=[embedding],
             n_results=n_results,
         )
-         
-        #Format results into list of dictionaries
+        
+        # Format results into list of dictionaries
         formatted_results = []
         for text, metadata, distance in zip(
             results['documents'][0],
@@ -57,7 +55,7 @@ class Retriever:
                 'char_length': metadata['char_length'],
                 'similarity_score': 1 - distance
             })
-        #Return the results
+        
         return formatted_results
 
 

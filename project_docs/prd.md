@@ -19,14 +19,15 @@ Build a web-based AI assistant named **Alexa** to act as a virtual Member Suppor
 ### ✅ In Scope
 
 - LLM-powered chatbot trained to simulate Horizon Bay CU agent
-- Agent tone from "Alexa’s Identity Profile"
+- Agent tone from "Alexa's Identity Profile"
 - Tool-based decision system for key actions:
   - `record_user_details`
   - `log_unknown_question`
   - `send_notification`
 - Push notifications via Pushover for unresolved queries and escalations
 - Retrieval-Augmented Generation (RAG) using internal knowledge base
-- Web UI (Gradio/Streamlit)
+- Automated RAG pipeline initialization
+- Web UI (Gradio) with HuggingFace Spaces deployment
 
 ### ❌ Out of Scope
 
@@ -63,6 +64,10 @@ Build a web-based AI assistant named **Alexa** to act as a virtual Member Suppor
   - Member Toolkit
   - Why Join Horizon Bay CU
 - Chunked, embedded via OpenAI, queried via ChromaDB
+- Automated pipeline initialization:
+  - PDF processing on first run
+  - Embedding creation if needed
+  - Persistent storage in ChromaDB
 
 ### 🔹 Feature 5: Tool-Driven Framework
 
@@ -71,11 +76,18 @@ Build a web-based AI assistant named **Alexa** to act as a virtual Member Suppor
 - System executes tools dynamically via handler
 - Easily extensible: add tools without touching core logic
 
+### 🔹 Feature 6: Automated Deployment
+
+- HuggingFace Spaces deployment
+- Environment variable management
+- Automated RAG pipeline setup
+- Persistent storage handling
+
 ---
 
 ## 4. Required Documents
 
-- Alexa’s Identity Profile
+- Alexa's Identity Profile
 - Account Support Manual
 - Member Services Toolkit
 - Membership Benefits Guide
@@ -90,6 +102,8 @@ Build a web-based AI assistant named **Alexa** to act as a virtual Member Suppor
 - Tools executed only when appropriate context is detected
 - System is extensible with new tools
 - LLM maintains tone and logic across sessions
+- RAG pipeline initializes automatically on first run
+- Successful deployment on HuggingFace Spaces
 
 ---
 
@@ -98,6 +112,8 @@ Build a web-based AI assistant named **Alexa** to act as a virtual Member Suppor
 - Web app chatbot (Member support agent)
 - Tool-driven chat framework
 - RAG engine (embeddings + retriever)
+- Automated RAG pipeline initialization
 - Tools module + handler
 - Pushover integration
+- HuggingFace Spaces deployment
 - Complete documentation + `README.md`

@@ -12,7 +12,8 @@
 │   ├── prompt_manager.py
 │   ├── pushover_alerts.py
 │   ├── state.py
-│   └── utils.py
+│   ├── utils.py
+│   └── rag_setup.py
 ├── agent/
 │   ├── AI_Agent_Identity_Profile_Alexa.md
 │   ├── faq_chunks.json
@@ -34,8 +35,7 @@
 ├── tools.py
 ├── .env
 ├── requirements.txt
-├── README.md
-└── run.sh
+└── README.md
 ```
 
 ---
@@ -48,6 +48,7 @@
 - Handles user input/output loop
 - Passes user message to LLM with context
 - Integrates tool schema + handles tool call responses
+- Initializes RAG pipeline on startup
 
 ### `app/prompt_manager.py`
 
@@ -61,6 +62,13 @@
 ### `app/state.py`
 
 - In-memory session state: history, flags, context
+
+### `app/rag_setup.py`
+
+- Handles automatic initialization of RAG pipeline
+- Processes PDFs into chunks if needed
+- Creates embeddings if they don't exist
+- Ensures RAG pipeline is ready before app starts
 
 ### `tools.py`
 
@@ -159,6 +167,13 @@ flowchart TD
         K1[send_notification]
         K2[record_user_details]
         K3[log_unknown_question]
+    end
+
+    subgraph RAG Pipeline
+        L1[rag_setup.py]
+        L2[pdf_processor.py]
+        L3[embedder.py]
+        L4[retriever.py]
     end
 ```
 

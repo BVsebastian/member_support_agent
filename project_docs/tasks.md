@@ -55,26 +55,32 @@ Each task is atomic, testable, and has a clear start and end.
 
 ## 🔍 RAG PIPELINE
 
-### Task 7: Chunk PDF FAQ Documents
+### Task 7: Implement `rag_setup.py`
+
+- Create automatic initialization script
+- Handle PDF processing and embedding creation
+- Ensure RAG pipeline is ready before app starts
+
+### Task 8: Chunk PDF FAQ Documents
 
 - Chunk: `data/knowledge_base/*.pdf`
 - Output: `faq_chunks.json`
 
-### Task 8: Embed Chunks
+### Task 9: Embed Chunks
 
 - Vectorize using OpenAI embeddings
 - Store with metadata
 
-### Task 9: Build ChromaDB Index
+### Task 10: Build ChromaDB Index
 
 - Persist index to `data/embeddings/`
 
-### Task 10: Implement Retriever
+### Task 11: Implement Retriever
 
 - Function: `retrieve_top_chunks(query)`
 - Output: chunk text + metadata
 
-### Task 11: Unit Test RAG
+### Task 12: Unit Test RAG
 
 - Validate known query returns expected result
 
@@ -82,16 +88,16 @@ Each task is atomic, testable, and has a clear start and end.
 
 ## 💬 MAIN CHAT LOOP
 
-### Task 12: Build Minimal Gradio UI
+### Task 13: Build Minimal Gradio UI
 
 - Textbox + output window
 - Submit message, return dummy reply
 
-### Task 13: Add Prompt Flow
+### Task 14: Add Prompt Flow
 
 - Combine system prompt, RAG, and OpenAI call
 
-### Task 14: Add Session State
+### Task 15: Add Session State
 
 - Store chat history and flags using `state.py`
 
@@ -99,16 +105,16 @@ Each task is atomic, testable, and has a clear start and end.
 
 ## ⚠️ ALERTS + LOGGING
 
-### Task 15: Create `pushover_alerts.py`
+### Task 16: Create `pushover_alerts.py`
 
 - `record_unknown_question(question)`
 - `record_user_details(email, name?, notes?)`
 
-### Task 16: Integrate Alerts in Chat
+### Task 17: Integrate Alerts in Chat
 
 - Detect escalation or unknown question triggers
 
-### Task 17: Log to `data/logs/`
+### Task 18: Log to `data/logs/`
 
 - Save event JSONs with timestamps
 
@@ -116,7 +122,7 @@ Each task is atomic, testable, and has a clear start and end.
 
 ## 🔧 TOOL-DRIVEN LOGIC
 
-### Task 18: Define Tool Functions
+### Task 19: Define Tool Functions
 
 - File: `tools.py`
 - Functions:
@@ -124,17 +130,17 @@ Each task is atomic, testable, and has a clear start and end.
   - `record_user_details(params)`
   - `log_unknown_question(params)`
 
-### Task 19: Define Tool Schemas
+### Task 20: Define Tool Schemas
 
 - Define JSON schemas describing inputs + purpose
 - Register during LLM invocation
 
-### Task 20: Implement Tool Handler
+### Task 21: Implement Tool Handler
 
 - `handle_tool_call(tool_call_obj)`
 - Route to correct function and return result
 
-### Task 21: Update Chat Loop
+### Task 22: Update Chat Loop
 
 - Modify `main.py` to:
   - Pass tool schema to LLM
@@ -145,18 +151,16 @@ Each task is atomic, testable, and has a clear start and end.
 
 ## ✅ FINAL QA + DEPLOY
 
-### Task 22: Add `run.sh`
-
-- Launches Gradio app
-
 ### Task 23: Manual QA
 
 - Test full flow:
   - FAQ success
   - Unknown detection
   - Escalation + tool execution
+  - RAG pipeline initialization
 
 ### Task 24: Write `README.md`
 
 - Setup, dependencies, usage
 - Document tool-driven approach
+- Deployment instructions for HuggingFace Spaces

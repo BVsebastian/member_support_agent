@@ -15,6 +15,7 @@ def send_notification(params):
         dict: Result of the notification attempt
     """
     from app.state import session_state
+    from app.pushover_alerts import push
     
     # Extract issue type from the request
     issue_type = params.get("issue_type", "general")
@@ -35,17 +36,35 @@ def send_notification(params):
         "issue_type": issue_type
     }
     
+    # Format the notification message
+    message = f"New {issue_type.title()} Issue Escalation\n\n"
+    message += f"Time: {details['timestamp']}\n"
+    message += f"Session ID: {details['session_id']}\n\n"
+    
+    # Add contact information if available
+    if details['contact_info']:
+        message += "Contact Details:\n"
+        message += f"- Name: {details['contact_info'].get('name', 'Not provided')}\n"
+        message += f"- Email: {details['contact_info'].get('email', 'Not provided')}\n"
+        message += f"- Phone: {details['contact_info'].get('phone', 'Not provided')}\n"
+    else:
+        message += "No contact details provided\n"
+    message += "\n"
+    
+    # Add the user's original request
+    message += f"User's Request:\n{details['original_request']}"
+    
     # Send notification
     try:
-        from app.pushover_alerts import push
-        push(details)
+        success = push(message, title=f"{issue_type.title()} Issue Alert")
         
         # Mark notification as sent for this issue type
-        session_state.mark_notification_sent(issue_type)
+        if success:
+            session_state.mark_notification_sent(issue_type)
         
         return {
-            "success": True,
-            "message": "Notification sent successfully"
+            "success": success,
+            "message": "Notification sent successfully" if success else "Failed to send notification"
         }
     except Exception as e:
         return {

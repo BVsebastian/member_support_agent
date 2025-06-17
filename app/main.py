@@ -7,9 +7,13 @@ import os
 from dotenv import load_dotenv
 import json
 from tools import handle_tool_call
+from app.rag_setup import setup_rag_pipeline
 
 # Load environment variables
 load_dotenv()
+
+# Initialize RAG pipeline
+setup_rag_pipeline()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
@@ -34,9 +38,14 @@ tools = [
                             "email": {"type": "string"},
                             "phone": {"type": "string"}
                         }
+                    },
+                    "issue_type": {
+                        "type": "string",
+                        "description": "The type of issue being escalated",
+                        "enum": ["loan", "card", "account", "fraud", "refinance"]
                     }
                 },
-                "required": ["original_request"]
+                "required": ["original_request", "issue_type"]
             }
         }
     },
@@ -138,6 +147,11 @@ def respond(message, history):
             # Handle tool calls
             tool_calls = message.tool_calls
             for tool_call in tool_calls:
+                # Print the tool call details
+                print(f"\nTool Call Details:")
+                print(f"Function: {tool_call.function.name}")
+                print(f"Arguments: {tool_call.function.arguments}")
+                
                 # Execute the tool call
                 result = handle_tool_call({
                     "name": tool_call.function.name,
